@@ -8,10 +8,10 @@ import scipy.misc
 import os
 
 # 读取MNIST数据集。如果不存在会事先下载
-mnist = input_data.read_data_sets("MNIST_data/MNIST_data/", one_hot=True)
+mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 # 把原始图片保存在MNIST_data/raw/文件夹下
 # 如果没有这个文件夹,会自动创建
-save_dir = 'MNIST_data/MNIST_data/raw/'
+save_dir = 'MNIST_data/raw/'
 if os.path.exists(save_dir) is False:
     os.makedirs(save_dir)
 
@@ -27,3 +27,5 @@ for i in range(20):
     # 将image_array保存为图片
     #先用scipy.misc.toimage转换为图像,再调用save直接保存
     scipy.misc.toimage(image_array,cmin=0.0,cmax=1.0).save(filename)
+# 打印出第0张训练图片的标签
+print(mnist.train.labels[0,:])
