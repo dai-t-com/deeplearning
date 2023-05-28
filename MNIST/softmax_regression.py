@@ -33,4 +33,24 @@ cross_entropy = \
 # 有了损失,就可以用梯度下降法针对模型的参数(W和b)进行优化
 train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
 
-# 创建一个Session
+# 创建一个Session。只有在Session中才能运行优化步骤train_step
+sess = tf.InteractiveSession()
+# 运行之前必须要初始化所有变量，分配内存
+tf.global_variables_initializer().run()
+
+# 进行1000步梯度下降
+for _ in range(1000):
+    # 在mnist.train中取100个训练数据
+    # batch_xs是形状为（100,784)的图像数据，batch_ys是形如(100,10)的实际标签
+    # batch_xs,batch_ys对应着两个占位符x和y_
+    batch_xs,batch_ys = mnist.train.next_batch(100)
+    # 在Session中运行train_step,运行时要传入占位符的值
+    sess.run(train_step,feed_dict={x: batch_xs,y_: batch_ys})
+
+# 正确的预测结果
+correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
+# 计算预测准确率,它们都是Tensor
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+# 在Session中运行Tensor可以得到Tensor的值
+# 这里是获取最终模型的准确率
+print(sess.run(accuracy,feed_dict={x: mnist.test.images,y_: mnist.test.labels}))
